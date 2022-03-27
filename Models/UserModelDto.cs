@@ -1,6 +1,6 @@
 namespace CyberMephiAPI.Models;
 
-public class UserModelDTO {
+public class UserModelDto {
     public string email { get; set; }
     public string password { get; set; }
 }

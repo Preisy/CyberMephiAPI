@@ -17,8 +17,8 @@ var mongoDbSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Ge
 // Add services to the container.
 
 // For Identity
-builder.Services.AddIdentity<UserModelDAO, RoleModel>()
-    .AddMongoDbStores<UserModelDAO, RoleModel, Guid>
+builder.Services.AddIdentity<UserModelDao, RoleModel>()
+    .AddMongoDbStores<UserModelDao, RoleModel, Guid>
     (
         mongoDbSettings.ConnectionString, mongoDbSettings.Name
     );

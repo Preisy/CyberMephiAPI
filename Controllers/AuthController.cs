@@ -8,7 +8,6 @@ using System.IdentityModel.Tokens.Jwt;
 using CyberMephiAPI.Database;
 using CyberMephiAPI.Models;
 
-
 namespace CyberMephiAPI.Controllers;
 
 [ApiController]
@@ -16,15 +15,16 @@ namespace CyberMephiAPI.Controllers;
 public class AuthController : ControllerBase {
     private CyberMephiAPI.Database.Database database = new MongoDatabase();
     // [Required()]
+    [HttpPost(Name = "logIn")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [HttpPost(Name = "logIn")]
-    public async Task<ActionResult> logIn([FromBody] UserModelDTO requestUser) {
-        
-        Console.WriteLine("test");
-        UserModelDAO user = new UserModelDAO(requestUser);
-        var res = await database.findOneAsync<UserModelDAO>("email", user.email);
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> logIn([FromBody] UserModelDto requestUser) {
+        // Mediator
+
+        UserModelDao user = new UserModelDao(requestUser);
+        var res = await database.findOneAsync<UserModelDao>("email", user.email);
         if (res == null)
             return NotFound();
         else if (res.passwordHash != user.passwordHash)
@@ -36,14 +36,14 @@ public class AuthController : ControllerBase {
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult> signUp([FromBody] UserModelDTO requestUser) {
-        UserModelDAO user = new UserModelDAO(requestUser);
-        if (await database.findOneAsync<UserModelDAO>("email", user.email) != null) {
+    public async Task<ActionResult> signUp([FromBody] UserModelDto requestUser) {
+        UserModelDao user = new UserModelDao(requestUser);
+        if (await database.findOneAsync<UserModelDao>("email", user.email) != null) {
             Console.WriteLine("This email is taken");
             return Conflict();
         }
 
-        database.setAsync<UserModelDAO>(user); // здесь может и не нужен await?
+        database.setAsync<UserModelDao>(user); // здесь может и не нужен await?
         return Ok();
     }
 
@@ -53,31 +53,16 @@ public class AuthController : ControllerBase {
         // SignInManager
         return Ok();
     }
-
-
-    [HttpPost("test/{id}")]
-    [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(UserModelDTO))]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> test([FromBody] UserModelDTO requestUser, int id) {
-        Console.WriteLine(id);
-        UserModelDAO user = new UserModelDAO(requestUser);
-        if (await database.findOneAsync<UserModelDAO>("email", user.email) != null) {
-            Console.WriteLine("This email is taken");
-            return Conflict(requestUser);
-        }
-
-        // Database.setUserAsync(user); // здесь может и не нужен await?
-        return Ok(requestUser);
-    }
+    
 
     [HttpGet]
-    public List<UserModelDAO> getAllUsers() {
-        return database.getAll<UserModelDAO>();
+    public List<UserModelDao> getAllUsers() {
+        return database.getAll<UserModelDao>();
     }
 
     [HttpDelete]
     public int deleteAllUsers() {
-        database.deleteAll<UserModelDAO>();
+        database.deleteAll<UserModelDao>();
         return 200;
     }
 }

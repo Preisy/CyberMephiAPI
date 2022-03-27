@@ -14,10 +14,10 @@ using System;
 namespace CyberMephiAPI.Models;
 
 [CollectionName("user")]
-public class UserModelDAO : MongoIdentityUser<Guid> {
-    public UserModelDAO() {}
+public class UserModelDao : MongoIdentityUser<Guid> {
+    public UserModelDao() {}
     
-    public UserModelDAO(UserModelDTO user) {
+    public UserModelDao(UserModelDto user) {
         this.email = user.email;
         this.passwordHash = this.getHashPassword(user.password);
     }
