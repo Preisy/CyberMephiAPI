@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication3.Models; 
+namespace CyberMephiAPI.Models; 
 
 public class SignUpModel {
     [Required(ErrorMessage = "User Name is required")]

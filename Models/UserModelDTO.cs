@@ -1,4 +1,4 @@
-namespace WebApplication3.Models;
+namespace CyberMephiAPI.Models;
 
 public class UserModelDTO {
     public string email { get; set; }

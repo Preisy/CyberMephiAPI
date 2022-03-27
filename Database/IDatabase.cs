@@ -1,6 +1,4 @@
-using WebApplication3.Models;
-
-namespace WebApplication3.Database;
+namespace CyberMephiAPI.Database;
 
 // interface IDatabase { // или так лучше?
 public abstract class Database { 

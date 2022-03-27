@@ -1,22 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
-using WebApplication3.Models;
+using CyberMephiAPI.Models;
 using Microsoft.AspNetCore.Mvc; // ? 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 
-namespace WebApplication3.Controllers;
+namespace CyberMephiAPI.Controllers;
 
-using Database;
-
+[Authorize]
 [ApiController]
 [Route("[controller]/[action]")]
 public class TestController : ControllerBase {
     // private readonly ILogger<TestController> _logger; // ?
 
     [HttpGet]
-    public IActionResult test() {
+    public IActionResult secureTest() {
+        return Ok();
+    }
+    
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult nonSecureTest() {
         return Ok();
     }
 }

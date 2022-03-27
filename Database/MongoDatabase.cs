@@ -1,14 +1,10 @@
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
+using CyberMephiAPI.Models;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
-using WebApplication3.Models;
 
-namespace WebApplication3.Database; 
+namespace CyberMephiAPI.Database; 
 
-public class MongoDatabase : Database {
+public class MongoDatabase : CyberMephiAPI.Database.Database {
     public MongoDatabase() {
         var client = new MongoClient(Config.MONGO_URL);
         this.database = client.GetDatabase(Config.MONGO_DATABASE_NAME);
@@ -17,13 +13,12 @@ public class MongoDatabase : Database {
     // private readonly MongoClient client;
     private readonly IMongoDatabase database;
 
-    public IMongoCollection<DocumentType> getCollection<DocumentType>() {
-        return database.GetCollection<DocumentType>(getCollectionName<DocumentType>());
+    public IMongoCollection<TModel> getCollection<TModel>() {
+        return database.GetCollection<TModel>(getCollectionName<TModel>());
     }
 
-    private string getCollectionName<DocumentType>() {
-        string name = typeof(DocumentType).Name;
-        
+    private string getCollectionName<TModel>() {
+        string name = typeof(TModel).Name;
         return name.Substring(0, name.IndexOf("Model")).ToLower();
     }
 

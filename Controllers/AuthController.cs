@@ -1,19 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
-using WebApplication3.Models;
 using Microsoft.AspNetCore.Mvc; // ? 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using CyberMephiAPI.Database;
+using CyberMephiAPI.Models;
 
-namespace WebApplication3.Controllers;
 
-using Database;
+namespace CyberMephiAPI.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
 public class AuthController : ControllerBase {
-    private Database database = new MongoDatabase();
+    private CyberMephiAPI.Database.Database database = new MongoDatabase();
     // [Required()]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -43,6 +44,13 @@ public class AuthController : ControllerBase {
         }
 
         database.setAsync<UserModelDAO>(user); // здесь может и не нужен await?
+        return Ok();
+    }
+
+    [HttpPost]
+    [Authorize]
+    public ActionResult logOut() {
+        // SignInManager
         return Ok();
     }
 
